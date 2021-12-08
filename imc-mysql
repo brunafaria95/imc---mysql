@@ -1,0 +1,40 @@
+/*
+ * formula do IMC = peso / altura*2
+ *
+ * IMC < 19 = abaixo do peso
+ * IMC entre 19 E 24 - peso normal
+ * IMC entre 25 E 29 - sobrepeso
+ * IMC entre 30 E 39 - obesidade 1
+ 
+ * IMC > 40          - obesidade morbida
+ *
+ * */
+ 
+ CREATE FUNCTION IMC(peso FLOAT, altura FLOAT)
+ RETURN FLOAT DETERMINISTIC
+ RETURN ROUND(peso / pow (altura,2) , 2);
+ 
+ DELIMITER $$
+ 
+ CREATE  FUNCTION IMC_DESCRICAO (peso FLOAT, altura FLOAT)
+ RETURNS VARCHAR(30) DETERMINISTIC
+ BEGIN
+      DECLARE resultado VARCHAR(30);
+      DECLARE imcFLOAT;
+      
+      SET imc = (SELECT IMC (peso , altura));
+      
+      IF imc < 19  THEN SET resultado = 'abaixo do peso' ;
+      
+      ELSEIF imc BETWEEN 19 AND 24 THEN SET resultado = 'peso normal' ;
+      ELSEIF imc BETWEEN 25 AND 29 THEN SET resultado = 'sobrepeso'  ;
+      ELSEIF imc BETWEEN 30 AND 39 THEN SET resultado = 'obesidade 1' ;
+      ELSEIF imc > = 40 THEN SET  resultado = 'obesidade morbida' ;
+ 
+      END IF ;
+      
+      RETURN resultado;
+      
+      END $$
+      DELIMITER ;
+      
